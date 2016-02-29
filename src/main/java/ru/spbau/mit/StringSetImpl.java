@@ -55,7 +55,7 @@ public class StringSetImpl implements StringSet {
 
     public boolean add(String element) {
         if (!contains(element)) {
-            if (element == "") {
+            if (element.equals("")) {
                 head.setId(true);
                 head.size++;
                 return true;
@@ -81,7 +81,7 @@ public class StringSetImpl implements StringSet {
     }
 
     public boolean contains(String element) {
-        if (element == "") {
+        if (element.equals("")) {
             return head.id;
         }
         Node current = head;
@@ -102,7 +102,7 @@ public class StringSetImpl implements StringSet {
 
     public boolean remove(String element) {
         if (contains(element)) {
-            if (element == "") {
+            if (element.equals("")) {
                 head.setId(false);
                 head.size--;
                 return true;
@@ -111,13 +111,15 @@ public class StringSetImpl implements StringSet {
             for (int i = 0; i < element.length(); i++) {
                 char symbol = element.charAt(i);
                 Node next = current.findValue(symbol);
-                current.size--;
-                if (i == element.length() - 1 && next.id) {
-                    next.setId(false);
-                    next.size--;
-                    return true;
-                } else {
-                    current = next;
+                if (next != null) {
+                    current.size--;
+                    if (i == element.length() - 1 && next.id) {
+                        next.setId(false);
+                        next.size--;
+                        return true;
+                    } else {
+                        current = next;
+                    }
                 }
             }
         }
@@ -125,7 +127,7 @@ public class StringSetImpl implements StringSet {
     }
 
     public int howManyStartsWithPrefix(String prefix) {
-        if (prefix == "") {
+        if (prefix.equals("")) {
             return head.size;
         }
         Node current = head;
