@@ -7,7 +7,7 @@ import java.util.LinkedList;
  */
 public class StringSetImpl implements StringSet {
 
-    private class Node {
+    private final class Node {
         private LinkedList<Node> nodes = new LinkedList<>();
         private boolean id = false;
         private char value;
