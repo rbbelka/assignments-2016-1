@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class StringSetImpl implements StringSet {
 
     private class Node {
-        private LinkedList <Node> nodes = new LinkedList<>();
+        private LinkedList<Node> nodes = new LinkedList<>();
         private boolean id = false;
         private char value;
         private int size = 0;
@@ -27,7 +27,7 @@ public class StringSetImpl implements StringSet {
             return value;
         }
 
-        public Node(char cur) {
+        private Node(char cur) {
             value = cur;
         }
 
@@ -57,7 +57,7 @@ public class StringSetImpl implements StringSet {
                 char symbol = element.charAt(i);
                 Node next = current.findValue(symbol);
                 current.size++;
-                if (i == element.length()-1) {
+                if (i == element.length() - 1) {
                         current = current.addNext(symbol);
                         current.setId(true);
                         current.size++;
@@ -65,8 +65,7 @@ public class StringSetImpl implements StringSet {
                 }
                 if (next != null) {
                     current = next;
-                }
-                else {
+                } else {
                     current = current.addNext(symbol);
                 }
             }
@@ -82,13 +81,12 @@ public class StringSetImpl implements StringSet {
         for (int i = 0; i < element.length(); i++) {
             char symbol = element.charAt(i);
             Node next = current.findValue(symbol);
-            if(next == null) {
+            if (next == null) {
                 return false;
             }
-            if (i == element.length()-1 && next.id) {
+            if (i == element.length() - 1 && next.id) {
                     return true;
-            }
-            else {
+            } else {
                 current = next;
             }
         }
@@ -111,8 +109,7 @@ public class StringSetImpl implements StringSet {
                     next.setId(false);
                     next.size--;
                     return true;
-                }
-                else {
+                } else {
                     current = next;
                 }
             }
@@ -133,8 +130,7 @@ public class StringSetImpl implements StringSet {
             }
             if (i == prefix.length() - 1) {
                 return next.size;
-            }
-            else {
+            } else {
                 current = next;
             }
         }
