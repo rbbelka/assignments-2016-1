@@ -65,16 +65,15 @@ public class StringSetImpl implements StringSet {
                 char symbol = element.charAt(i);
                 Node next = current.findValue(symbol);
                 current.size++;
-                if (i == element.length() - 1) {
-                        current = current.addNext(symbol);
-                        current.setId(true);
-                        current.size++;
-                        return true;
-                }
                 if (next != null) {
                     current = next;
                 } else {
                     current = current.addNext(symbol);
+                }
+                if (i == element.length() - 1) {
+                    current.setId(true);
+                    current.size++;
+                    return true;
                 }
             }
         }
