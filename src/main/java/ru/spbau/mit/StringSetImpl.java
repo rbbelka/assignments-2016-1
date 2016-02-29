@@ -1,6 +1,7 @@
 package ru.spbau.mit;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
  * Created by Наталья on 22.02.2016.
@@ -35,7 +36,14 @@ public class StringSetImpl implements StringSet {
             if (nodes == null) {
                 return null;
             }
-            return nodes.stream().filter(node -> node.getValue() == cur).findFirst().orElse(null);
+            ListIterator<Node> iterator = nodes.listIterator();
+            while (iterator.hasNext()) {
+                Node node = iterator.next();
+                if (node.getValue() == cur) {
+                    return node;
+                }
+            }
+            return null;
         }
     }
 
