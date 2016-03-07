@@ -5,13 +5,12 @@ package ru.spbau.mit;
  */
 public class StringSetImpl implements StringSet {
 
+    private static final int ALPHABET_SIZE = 58;
+
     private static final class Node {
-        private Node[] nodes = new Node[58];
+        private Node[] nodes = new Node[ALPHABET_SIZE];
         private boolean isTerminal = false;
         private int size = 0;
-
-        private Node() {
-        }
 
         private Node addNext(char cur) {
             Node temp = new Node();
@@ -24,7 +23,7 @@ public class StringSetImpl implements StringSet {
         }
 
         private Node findValue(char cur) {
-            return nodes[cur-'A'];
+            return nodes[cur - 'A'];
         }
     }
 
