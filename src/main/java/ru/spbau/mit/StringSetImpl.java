@@ -3,6 +3,7 @@ package ru.spbau.mit;
 /**
  * Created by Наталья on 22.02.2016.
  */
+
 public class StringSetImpl implements StringSet {
 
     private static final int ALPHABET_SIZE = 58;
@@ -29,19 +30,28 @@ public class StringSetImpl implements StringSet {
 
     private Node head = new Node();
 
-    public int size() {
-        return head.size;
+    private enum WalkType {
+        ADD(1, true),
+        REMOVE(-1, false),
+        FIND(0, false);
+
+        private int increment;
+        private boolean terminal;
+        WalkType(int increment, boolean terminal) {
+            this.increment = increment;
+            this.terminal = terminal;
+        }
     }
 
-    private boolean walk(String element, Integer a, boolean flag) {
+    private Node walk(String element, WalkType walkType) {
         Node current = head;
         for (int i = 0; i < element.length(); i++) {
             char symbol = element.charAt(i);
             Node next = current.findValue(symbol);
-            current.size += a;
+            current.size += walkType.increment;
 
-            if (next == null && a == 0) {
-                return false;
+            if (next == null && walkType.increment == 0) {
+                return null;
             }
 
             if (next != null) {
@@ -51,42 +61,48 @@ public class StringSetImpl implements StringSet {
             }
         }
 
-        if (a == 0) {
-            return current.isTerminal;
+        if (walkType.increment != 0) {
+            current.setTerminal(walkType.terminal);
+            current.size += walkType.increment;
         }
-        current.setTerminal(flag);
-        current.size += a;
-        return true;
+        return current;
+    }
+
+    public int size() {
+        return head.size;
     }
 
     public boolean add(String element) {
         if (contains(element)) {
             return false;
         }
-        return walk(element, 1, true);
+        walk(element, WalkType.ADD);
+        return true;
     }
 
     public boolean contains(String element) {
-        return walk(element, 0, false);
+        Node node = walk(element, WalkType.FIND);
+        if (node == null) {
+            return false;
+        } else {
+            return node.isTerminal;
+        }
     }
 
     public boolean remove(String element) {
         if (!contains(element)) {
             return false;
         }
-        return walk(element, -1, false);
+        walk(element, WalkType.REMOVE);
+        return true;
     }
 
     public int howManyStartsWithPrefix(String prefix) {
-        Node current = head;
-        for (int i = 0; i < prefix.length(); i++) {
-            char symbol = prefix.charAt(i);
-            Node next = current.findValue(symbol);
-            if (next == null) {
-                return 0;
-            }
-            current = next;
+        Node node = walk(prefix, WalkType.FIND);
+        if (node == null) {
+            return 0;
+        } else {
+            return node.size;
         }
-        return current.size;
     }
 }
