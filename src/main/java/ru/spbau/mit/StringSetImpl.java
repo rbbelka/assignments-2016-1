@@ -3,7 +3,6 @@ package ru.spbau.mit;
 /**
  * Created by Наталья on 22.02.2016.
  */
-
 public class StringSetImpl implements StringSet {
 
     private static final int ALPHABET_SIZE = 58;
@@ -13,9 +12,13 @@ public class StringSetImpl implements StringSet {
         private boolean isTerminal = false;
         private int size = 0;
 
+        private int index(char cur) {
+            return cur - 'A';
+        }
+
         private Node addNext(char cur) {
             Node temp = new Node();
-            nodes[cur - 'A'] = temp;
+            nodes[index(cur)] = temp;
             return temp;
         }
 
@@ -24,7 +27,11 @@ public class StringSetImpl implements StringSet {
         }
 
         private Node findValue(char cur) {
-            return nodes[cur - 'A'];
+            return nodes[index(cur)];
+        }
+
+        private void delete(char cur) {
+            nodes[index(cur)] = null;
         }
     }
 
@@ -50,20 +57,27 @@ public class StringSetImpl implements StringSet {
             Node next = current.findValue(symbol);
             current.size += walkType.increment;
 
-            if (next == null && walkType.increment == 0) {
-                return null;
-            }
-
-            if (next != null) {
-                current = next;
-            } else {
-                current = current.addNext(symbol);
+            switch (walkType) {
+                case REMOVE:
+                    if (next != null && next.size == 1) {
+                        current.delete(element.charAt(i));
+                        return null;
+                    }
+                case FIND:
+                    if (next == null) {
+                        return null;
+                    }
+                case ADD:
+                    if (next != null) {
+                        current = next;
+                    } else {
+                        current = current.addNext(symbol);
+                    }
             }
         }
-
-        if (walkType.increment != 0) {
-            current.setTerminal(walkType.terminal);
-            current.size += walkType.increment;
+        if (walkType != WalkType.FIND) {
+                current.setTerminal(walkType.terminal);
+                current.size += walkType.increment;
         }
         return current;
     }
@@ -82,11 +96,7 @@ public class StringSetImpl implements StringSet {
 
     public boolean contains(String element) {
         Node node = walk(element, WalkType.FIND);
-        if (node == null) {
-            return false;
-        } else {
-            return node.isTerminal;
-        }
+        return node != null && node.isTerminal;
     }
 
     public boolean remove(String element) {
