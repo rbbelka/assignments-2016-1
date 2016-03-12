@@ -73,6 +73,8 @@ public class StringSetImpl implements StringSet {
                     } else {
                         current = current.addNext(symbol);
                     }
+                default:
+                    break;
             }
         }
         if (walkType != WalkType.FIND) {
