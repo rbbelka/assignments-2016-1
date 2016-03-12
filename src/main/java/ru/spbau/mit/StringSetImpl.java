@@ -77,6 +77,7 @@ public class StringSetImpl implements StringSet {
                     break;
             }
         }
+        
         if (walkType != WalkType.FIND) {
                 current.setTerminal(walkType.terminal);
                 current.size += walkType.increment;
