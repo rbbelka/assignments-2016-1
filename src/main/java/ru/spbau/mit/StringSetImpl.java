@@ -49,8 +49,7 @@ public class StringSetImpl implements StringSet, StreamSerializable  {
                         outStream.writeBoolean(false);
                     }
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new SerializationException();
             }
         }
@@ -66,8 +65,7 @@ public class StringSetImpl implements StringSet, StreamSerializable  {
                         nodes[i].deserialize(in);
                     }
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new SerializationException();
             }
         }
