@@ -1,16 +1,18 @@
 package ru.spbau.mit;
 
+import java.io.*;
+
 /**
  * Created by Наталья on 22.02.2016.
  */
-public class StringSetImpl implements StringSet {
+public class StringSetImpl implements StringSet, StreamSerializable  {
 
     private static final int ALPHABET_SIZE = 58;
 
     private static final class Node {
-        private Node[] nodes = new Node[ALPHABET_SIZE];
-        private boolean isTerminal = false;
         private int size = 0;
+        private boolean isTerminal = false;
+        private Node[] nodes = new Node[ALPHABET_SIZE];
 
         private int index(char cur) {
             return cur - 'A';
@@ -33,6 +35,43 @@ public class StringSetImpl implements StringSet {
         private void delete(char cur) {
             nodes[index(cur)] = null;
         }
+
+        private void serialize(OutputStream out) {
+            try {
+                DataOutputStream outStream = new DataOutputStream(out);
+                outStream.writeInt(size);
+                outStream.writeBoolean(isTerminal);
+                for (int i = 0; i < ALPHABET_SIZE; i++) {
+                    if (nodes[i] != null) {
+                        outStream.writeBoolean(true);
+                        nodes[i].serialize(out);
+                    } else {
+                        outStream.writeBoolean(false);
+                    }
+                }
+            }
+            catch (IOException e) {
+                throw new SerializationException();
+            }
+        }
+
+        private void deserialize(InputStream in) {
+            try {
+                DataInputStream inStream = new DataInputStream(in);
+                size = inStream.readInt();
+                isTerminal = inStream.readBoolean();
+                for (int i = 0; i < ALPHABET_SIZE; i++) {
+                    if (inStream.readBoolean()) {
+                        nodes[i] = new Node();
+                        nodes[i].deserialize(in);
+                    }
+                }
+            }
+            catch (IOException e) {
+                throw new SerializationException();
+            }
+        }
+
     }
 
     private Node head = new Node();
@@ -117,5 +156,15 @@ public class StringSetImpl implements StringSet {
         } else {
             return node.size;
         }
+    }
+
+    public void serialize(OutputStream out) {
+        head.serialize(out);
+    }
+
+    public void deserialize(InputStream in) {
+        Node tmp = new Node();
+        tmp.deserialize(in);
+        head = tmp;
     }
 }
