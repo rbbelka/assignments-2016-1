@@ -36,40 +36,33 @@ public class StringSetImpl implements StringSet, StreamSerializable  {
             nodes[index(cur)] = null;
         }
 
-        private void serialize(OutputStream out) {
-            try {
-                DataOutputStream outStream = new DataOutputStream(out);
-                outStream.writeInt(size);
-                outStream.writeBoolean(isTerminal);
-                for (int i = 0; i < ALPHABET_SIZE; i++) {
-                    if (nodes[i] != null) {
-                        outStream.writeBoolean(true);
-                        nodes[i].serialize(out);
-                    } else {
-                        outStream.writeBoolean(false);
-                    }
+        private void serialize(OutputStream out) throws IOException {
+            DataOutputStream outStream = new DataOutputStream(out);
+            outStream.writeBoolean(isTerminal);
+            for (int i = 0; i < ALPHABET_SIZE; i++) {
+                if (nodes[i] != null) {
+                    outStream.writeBoolean(true);
+                    nodes[i].serialize(out);
+                } else {
+                    outStream.writeBoolean(false);
                 }
-            } catch (IOException e) {
-                throw new SerializationException();
             }
         }
 
-        private void deserialize(InputStream in) {
-            try {
-                DataInputStream inStream = new DataInputStream(in);
-                size = inStream.readInt();
-                isTerminal = inStream.readBoolean();
-                for (int i = 0; i < ALPHABET_SIZE; i++) {
-                    if (inStream.readBoolean()) {
-                        nodes[i] = new Node();
-                        nodes[i].deserialize(in);
-                    }
+        private void deserialize(InputStream in) throws IOException  {
+            DataInputStream inStream = new DataInputStream(in);
+            isTerminal = inStream.readBoolean();
+            if (isTerminal) {
+                size++;
+            }
+            for (int i = 0; i < ALPHABET_SIZE; i++) {
+                if (inStream.readBoolean()) {
+                    nodes[i] = new Node();
+                    nodes[i].deserialize(in);
+                    size += nodes[i].size;
                 }
-            } catch (IOException e) {
-                throw new SerializationException();
             }
         }
-
     }
 
     private Node head = new Node();
@@ -157,12 +150,20 @@ public class StringSetImpl implements StringSet, StreamSerializable  {
     }
 
     public void serialize(OutputStream out) {
-        head.serialize(out);
+        try{
+            head.serialize(out);
+        } catch (IOException e) {
+            throw new SerializationException();
+        }
     }
 
     public void deserialize(InputStream in) {
-        Node tmp = new Node();
-        tmp.deserialize(in);
-        head = tmp;
+        try{
+            Node tmp = new Node();
+            tmp.deserialize(in);
+            head = tmp;
+        } catch (IOException e) {
+            throw new SerializationException();
+        }
     }
 }
