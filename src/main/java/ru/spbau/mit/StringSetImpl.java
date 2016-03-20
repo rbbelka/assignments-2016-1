@@ -150,7 +150,7 @@ public class StringSetImpl implements StringSet, StreamSerializable  {
     }
 
     public void serialize(OutputStream out) {
-        try{
+        try {
             head.serialize(out);
         } catch (IOException e) {
             throw new SerializationException();
@@ -158,7 +158,7 @@ public class StringSetImpl implements StringSet, StreamSerializable  {
     }
 
     public void deserialize(InputStream in) {
-        try{
+        try {
             Node tmp = new Node();
             tmp.deserialize(in);
             head = tmp;
