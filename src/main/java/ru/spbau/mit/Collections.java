@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public abstract class Collections {
 
-    public static <T, R> Iterable<R> map(final Function1<? super T, ? extends R> f, final Iterable<T> a) {
+    public static <T, R> Iterable<R> map(final Function1<? super T, R> f, final Iterable<T> a) {
         ArrayList<R> b = new ArrayList<>();
         for (T item : a) {
             b.add(f.apply(item));
@@ -38,7 +38,7 @@ public abstract class Collections {
         return takeWhile(p.not(), a);
     }
 
-    public static <T, R> R foldl(final Function2<? super R, ? super T, ? extends R> f, R e, final Iterable<T> a) {
+    public static <T, R> R foldl(final Function2<? super R, ? super T, R> f, R e, final Iterable<T> a) {
         R b = e;
         for (T item : a) {
             b = f.apply(b, item);
@@ -46,7 +46,7 @@ public abstract class Collections {
         return b;
     }
 
-    public static <T, R> R foldr(final Function2<? super T, ? super R, ? extends R> f, R e, final Iterable<T> a) {
+    public static <T, R> R foldr(final Function2<? super T, ? super R, R> f, R e, final Iterable<T> a) {
         R b = e;
         final Iterator<T> iter = a.iterator();
 

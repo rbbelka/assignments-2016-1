@@ -8,160 +8,166 @@ import static org.junit.Assert.*;
 
 public class FunctionalTest {
 
-    private List<Integer> testList = asList(12, 6, -4, 27, 16, -12, 30);
+    private static final List<Integer> TEST_LIST = asList(12, 6, -4, 27, 16, -12, 30);
 
-    private List<Integer> testNumbers = asList(10, 16, 24, 6);
+    private static final List<Integer> TEST_NUMBERS = asList(10, 16, 24, 6);
 
-    private List<String> s = asList("b", "c", "d");
+    private static final List<String> S = asList("b", "c", "d");
 
-    private List<Integer> testEmpty = new ArrayList<>();
+    private static final List<Integer> TEST_EMPTY = new ArrayList<>();
 
-    private Function1<Integer, Double> sqrt = new Function1<Integer, Double>() {
+    private static final Function1<Integer, Double> SQRT = new Function1<Integer, Double>() {
         public Double apply(Integer arg) {
             return Math.sqrt(arg);
         }
     };
 
-    private Function1<Integer, Integer> square = new Function1<Integer, Integer>() {
+    private static final Function1<Integer, Integer> SQUARE = new Function1<Integer, Integer>() {
         public Integer apply(Integer arg) {
             return arg * arg;
         }
     };
 
-    private Function1<Integer, Integer> inc = new Function1<Integer, Integer>() {
+    private static final Function1<Integer, Integer> INC = new Function1<Integer, Integer>() {
         public Integer apply(Integer arg) {
             return ++arg;
         }
     };
 
-    private Function1<Integer, Integer> dec = new Function1<Integer, Integer>() {
+    private static final Function1<Integer, Integer> DEC = new Function1<Integer, Integer>() {
         public Integer apply(Integer arg) {
             return --arg;
         }
     };
 
-    private Function1<String, String> suffix = new Function1<String, String>() {
+    private static final Function1<String, String> SUFFIX = new Function1<String, String>() {
         public String apply(String arg1) {
             return arg1 + 's';
         }
     };
 
-    private Function2<Integer, Integer, Integer> sum = new Function2<Integer, Integer, Integer>() {
+    private static final Function2<Integer, Integer, Integer> SUM = new Function2<Integer, Integer, Integer>() {
         public Integer apply(Integer arg1, Integer arg2) {
             return arg1 + arg2;
         }
     };
 
-    private Function2<Integer, Integer, Integer> mult = new Function2<Integer, Integer, Integer>() {
+    private static final Function2<Integer, Integer, Integer> MULT = new Function2<Integer, Integer, Integer>() {
         public Integer apply(Integer arg1, Integer arg2) {
             return arg1 * arg2;
         }
     };
 
-    private Function2<String, String, String> concat = new Function2<String, String, String>() {
+    private static final Function2<String, String, String> CONCAT = new Function2<String, String, String>() {
         public String apply(String arg1, String arg2) {
             return arg1 + arg2;
         }
     };
 
-    private Function2<Integer, Double, Double> divide = new Function2<Integer, Double, Double>() {
+    private static final Function2<Integer, Double, Double> DIVIDE = new Function2<Integer, Double, Double>() {
         public Double apply(Integer firstArgument, Double secondArgument) {
             return firstArgument / secondArgument;
         }
     };
 
-    private Predicate<Integer> greater25 = new Predicate<Integer>() {
+    private static final Predicate<Integer> GREATER_25 = new Predicate<Integer>() {
         public Boolean apply(Integer arg) {
             return arg > 25;
         }
     };
 
-    private Predicate<Integer> lessNeg25 = new Predicate<Integer>() {
+    private static final Predicate<Integer> LESS_NEG_25 = new Predicate<Integer>() {
         public Boolean apply(Integer arg) {
             return arg < -25;
         }
     };
 
-    private Predicate<Integer> less16 = new Predicate<Integer>() {
+    private static final Predicate<Integer> LESS_16 = new Predicate<Integer>() {
         public Boolean apply(Integer arg) {
             return arg < 16;
         }
     };
 
-    private Predicate<Integer> greaterNeg16 = new Predicate<Integer>() {
+    private static final Predicate<Integer> GREATER_NEG_16 = new Predicate<Integer>() {
         public Boolean apply(Integer arg) {
             return arg > -16;
         }
     };
 
-    private Predicate<Integer> isPositive = new Predicate<Integer>() {
+    private static final Predicate<Integer> IS_POSITIVE = new Predicate<Integer>() {
         public Boolean apply(Integer arg) {
             return arg > 0;
         }
     };
 
+    private static final Predicate<Integer> IS_REACHED = new Predicate<Integer>() {
+        public Boolean apply(Integer arg) {
+            throw new RuntimeException();
+        }
+    };
+
     @Test
     public void testFunction1Apply() {
-        assertEquals(9, square.apply(3), 1e-9);
-        assertEquals(1, (int) inc.apply(0));
-        assertEquals("tests", suffix.apply("test"));
+        assertEquals(9, SQUARE.apply(3), 1e-9);
+        assertEquals(1, (int) INC.apply(0));
+        assertEquals("tests", SUFFIX.apply("test"));
     }
 
     @Test
     public void testFunction1Compose() {
 
-        for (int item : testList) {
-            assertEquals((double) Math.abs(item), square.compose(sqrt).apply(item), 1e-9);
-            assertEquals(item, (int) inc.compose(dec).apply(item));
-            assertEquals(item, (int) dec.compose(inc).apply(item));
+        for (int item : TEST_LIST) {
+            assertEquals((double) Math.abs(item), SQUARE.compose(SQRT).apply(item), 1e-9);
+            assertEquals(item, (int) INC.compose(DEC).apply(item));
+            assertEquals(item, (int) DEC.compose(INC).apply(item));
         }
-        assertEquals("less", suffix.compose(suffix).apply("le"));
+        assertEquals("less", SUFFIX.compose(SUFFIX).apply("le"));
     }
 
     @Test
     public void testFunction2Apply() {
-        assertEquals(9, (int) sum.apply(3, 6));
-        assertEquals(0, (int) mult.apply(0, 12));
-        assertEquals("", concat.apply("", ""));
-        assertEquals("onetwo", concat.apply("one", "two"));
+        assertEquals(9, (int) SUM.apply(3, 6));
+        assertEquals(0, (int) MULT.apply(0, 12));
+        assertEquals("", CONCAT.apply("", ""));
+        assertEquals("onetwo", CONCAT.apply("one", "two"));
     }
 
     @Test
     public void testFunction2Compose() {
 
-        for (int item : testList) {
-            assertEquals(item + 3, (int) sum.compose(inc).apply(item, 2));
-            assertEquals(4 * item - 1, (int) mult.compose(dec).apply(item, 4));
+        for (int item : TEST_LIST) {
+            assertEquals(item + 3, (int) SUM.compose(INC).apply(item, 2));
+            assertEquals(4 * item - 1, (int) MULT.compose(DEC).apply(item, 4));
         }
-        assertEquals("onetwos", concat.compose(suffix).apply("one", "two"));
+        assertEquals("onetwos", CONCAT.compose(SUFFIX).apply("one", "two"));
     }
 
     @Test
     public void testFunction2Bind1() {
 
-        for (int item : testList) {
-            assertEquals(item + 3, (int) sum.bind1(3).apply(item));
-            assertEquals(4 * item, (int) mult.bind1(4).apply(item));
+        for (int item : TEST_LIST) {
+            assertEquals(item + 3, (int) SUM.bind1(3).apply(item));
+            assertEquals(4 * item, (int) MULT.bind1(4).apply(item));
         }
-        assertEquals("onetwo", concat.bind1("one").apply("two"));
+        assertEquals("onetwo", CONCAT.bind1("one").apply("two"));
     }
 
     @Test
     public void testFunction2Bind2() {
 
-        for (int item : testList) {
-            assertEquals(item + 3, (int) sum.bind2(3).apply(item));
-            assertEquals(4 * item, (int) mult.bind2(4).apply(item));
+        for (int item : TEST_LIST) {
+            assertEquals(item + 3, (int) SUM.bind2(3).apply(item));
+            assertEquals(4 * item, (int) MULT.bind2(4).apply(item));
         }
-        assertEquals("onetwo", concat.bind2("two").apply("one"));
+        assertEquals("onetwo", CONCAT.bind2("two").apply("one"));
     }
 
     @Test
     public void testFunction2Curry() {
 
-        Function1<Integer, Function1<Integer, Integer>> curMult = mult.curry();
-        Function1<String, Function1<String, String>> curConcat = concat.curry();
-        for (int item : testList) {
+        Function1<Integer, Function1<Integer, Integer>> curMult = MULT.curry();
+        Function1<String, Function1<String, String>> curConcat = CONCAT.curry();
+        for (int item : TEST_LIST) {
             assertEquals(item * 3, (int) curMult.apply(item).apply(3));
             assertEquals("onetwo", curConcat.apply("one").apply("two"));
         }
@@ -170,7 +176,7 @@ public class FunctionalTest {
     @Test
     public void testPredicateAlways() {
 
-        for (int item : testList) {
+        for (int item : TEST_LIST) {
             assertTrue(Predicate.ALWAYS_TRUE.apply(item));
             assertFalse(Predicate.ALWAYS_FALSE.apply(item));
         }
@@ -181,41 +187,43 @@ public class FunctionalTest {
     @Test
     public void testPredicateOr() {
 
-        for (int item : testList) {
-            assertEquals(Math.abs(item) > 25, greater25.or(lessNeg25).apply(item));
-            assertTrue(isPositive.or(less16).apply(item));
+        for (int item : TEST_LIST) {
+            assertEquals(Math.abs(item) > 25, GREATER_25.or(LESS_NEG_25).apply(item));
+            assertTrue(IS_POSITIVE.or(LESS_16).apply(item));
         }
-        assertFalse(lessNeg25.or(isPositive).apply(-6));
+        assertFalse(LESS_NEG_25.or(IS_POSITIVE).apply(-6));
+        assertTrue(LESS_16.or(IS_REACHED).apply(8));
     }
 
     @Test
     public void testPredicateAnd() {
 
-        for (int item : testList) {
-            assertEquals(Math.abs(item) < 16, greaterNeg16.and(less16).apply(item));
-            assertFalse(isPositive.and(lessNeg25).apply(item));
+        for (int item : TEST_LIST) {
+            assertEquals(Math.abs(item) < 16, GREATER_NEG_16.and(LESS_16).apply(item));
+            assertFalse(IS_POSITIVE.and(LESS_NEG_25).apply(item));
         }
-        assertFalse(less16.and(isPositive).apply(24));
+        assertFalse(LESS_16.and(IS_POSITIVE).apply(24));
+        assertFalse(LESS_NEG_25.and(IS_REACHED).apply(-1));
     }
 
     @Test
     public void testPredicateNot() {
 
-        for (int item : testList) {
-            assertEquals(Math.abs(item) >= 16, greaterNeg16.and(less16).not().apply(item));
-            assertTrue(isPositive.and(lessNeg25).not().apply(item));
+        for (int item : TEST_LIST) {
+            assertEquals(Math.abs(item) >= 16, GREATER_NEG_16.and(LESS_16).not().apply(item));
+            assertTrue(IS_POSITIVE.and(LESS_NEG_25).not().apply(item));
         }
-        assertFalse(isPositive.not().apply(24));
-        assertTrue(greater25.not().apply(8));
+        assertFalse(IS_POSITIVE.not().apply(24));
+        assertTrue(GREATER_25.not().apply(8));
     }
 
     @Test
     public void testCollectionsMap() {
-        Iterable<Integer> mapIter = Collections.map(square, testList);
+        Iterable<Integer> mapIter = Collections.map(SQUARE, TEST_LIST);
         Iterator<Integer> iterator = mapIter.iterator();
         assertNotNull(iterator);
 
-        for (int item : testList) {
+        for (int item : TEST_LIST) {
             assertTrue(iterator.hasNext());
             assertEquals(item * item, (int) iterator.next());
         }
@@ -225,11 +233,11 @@ public class FunctionalTest {
     @Test
     public void testCollectionsFilter() {
 
-        Iterable<Integer> filterIter = Collections.filter(isPositive, testList);
+        Iterable<Integer> filterIter = Collections.filter(IS_POSITIVE, TEST_LIST);
         Iterator<Integer> iterator = filterIter.iterator();
         assertNotNull(iterator);
 
-        for (int item : testList) {
+        for (int item : TEST_LIST) {
             if (item <= 0) {
                 continue;
             }
@@ -242,11 +250,11 @@ public class FunctionalTest {
     @Test
     public void testCollectionsTakeWhile() {
 
-        Iterable<Integer> takeWhileIter = Collections.takeWhile(less16, testList);
+        Iterable<Integer> takeWhileIter = Collections.takeWhile(LESS_16, TEST_LIST);
         Iterator<Integer> iterator = takeWhileIter.iterator();
         assertNotNull(iterator);
 
-        for (int item : testList) {
+        for (int item : TEST_LIST) {
             if (item >= 16) {
                 break;
             }
@@ -259,11 +267,11 @@ public class FunctionalTest {
     @Test
     public void testCollectionsTakeWhileEmpty() {
 
-        Iterable<Integer> takeWhileIter = Collections.takeWhile(less16, testEmpty);
+        Iterable<Integer> takeWhileIter = Collections.takeWhile(LESS_16, TEST_EMPTY);
         Iterator<Integer> iterator = takeWhileIter.iterator();
         assertNotNull(iterator);
 
-        for (int item : testEmpty) {
+        for (int item : TEST_EMPTY) {
             if (item >= 16) {
                 break;
             }
@@ -276,11 +284,11 @@ public class FunctionalTest {
     @Test
     public void testCollectionsTakeUnless() {
 
-        Iterable<Integer> takeUnlessIter = Collections.takeUnless(greater25, testList);
+        Iterable<Integer> takeUnlessIter = Collections.takeUnless(GREATER_25, TEST_LIST);
         Iterator<Integer> iterator = takeUnlessIter.iterator();
         assertNotNull(iterator);
 
-        for (int item : testList) {
+        for (int item : TEST_LIST) {
             if (item > 25) {
                 break;
             }
@@ -292,14 +300,14 @@ public class FunctionalTest {
 
     @Test
     public void testCollectionsFoldl() {
-        assertEquals(58, (int) Collections.foldl(sum, 2, testNumbers));
-        assertEquals("abcd", Collections.foldl(concat, "a", s));
+        assertEquals(58, (int) Collections.foldl(SUM, 2, TEST_NUMBERS));
+        assertEquals("abcd", Collections.foldl(CONCAT, "a", S));
     }
 
     @Test
     public void testCollectionsFoldr() {
-        assertEquals(5.0, Collections.foldr(divide, 2.0, testNumbers), 1e-9);
-        assertEquals("bcda", Collections.foldr(concat, "a", s));
+        assertEquals(5.0, Collections.foldr(DIVIDE, 2.0, TEST_NUMBERS), 1e-9);
+        assertEquals("bcda", Collections.foldr(CONCAT, "a", S));
     }
 
 }
