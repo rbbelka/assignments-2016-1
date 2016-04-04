@@ -105,13 +105,13 @@ public class CollectionsTest {
 
     @Test
     public void testCollectionsTakeWhileEmpty() {
-        final List<Integer> EMPTY_LIST = emptyList();
+        final List<Integer> emptyList = emptyList();
 
-        Iterable<Integer> takeWhileIter = Collections.takeWhile(LESS_16, EMPTY_LIST);
+        Iterable<Integer> takeWhileIter = Collections.takeWhile(LESS_16, emptyList);
         Iterator<Integer> iterator = takeWhileIter.iterator();
         assertNotNull(iterator);
 
-        for (int item : EMPTY_LIST) {
+        for (int item : emptyList) {
             if (item >= 16) {
                 break;
             }

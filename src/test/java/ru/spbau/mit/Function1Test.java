@@ -1,8 +1,6 @@
 package ru.spbau.mit;
 
 import org.junit.Test;
-
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class Function1Test {
@@ -54,4 +52,5 @@ public class Function1Test {
         assertEquals(4, (int) INC.compose(SQUARE).apply(-3));
         assertEquals("less", SUFFIX.compose(SUFFIX).apply("le"));
     }
+
 }
