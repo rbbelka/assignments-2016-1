@@ -56,87 +56,31 @@ public class CollectionsTest {
     @Test
     public void testCollectionsMap() {
         List<Integer> list = asList(12, 6, -4, 27, 16, -12, 30);
-        Iterable<Integer> mapIter = Collections.map(SQUARE, list);
-        Iterator<Integer> iterator = mapIter.iterator();
-        assertNotNull(iterator);
-
-        for (int item : list) {
-            assertTrue(iterator.hasNext());
-            assertEquals(item * item, (int) iterator.next());
-        }
-        assertFalse(iterator.hasNext());
+        assertEquals(asList(144, 36, 16, 729, 256, 144, 900), Collections.map(SQUARE, list));
     }
 
     @Test
     public void testCollectionsFilter() {
-
         List<Integer> list = asList(12, 6, -4, 27, 16, -12, 30);
-        Iterable<Integer> filterIter = Collections.filter(IS_POSITIVE, list);
-        Iterator<Integer> iterator = filterIter.iterator();
-        assertNotNull(iterator);
-
-        for (int item : list) {
-            if (item <= 0) {
-                continue;
-            }
-            assertTrue(iterator.hasNext());
-            assertEquals(item, (int) iterator.next());
-        }
-        assertFalse(iterator.hasNext());
+        assertEquals(asList(12, 6, 27, 16, 30), Collections.filter(IS_POSITIVE, list));
     }
 
     @Test
     public void testCollectionsTakeWhile() {
-
         List<Integer> list = asList(12, 6, -4, 27, 16, -12, 30);
-        Iterable<Integer> takeWhileIter = Collections.takeWhile(LESS_16, list);
-        Iterator<Integer> iterator = takeWhileIter.iterator();
-        assertNotNull(iterator);
-
-        for (int item : list) {
-            if (item >= 16) {
-                break;
-            }
-            assertTrue(iterator.hasNext());
-            assertEquals(item, (int) iterator.next());
-        }
-        assertFalse(iterator.hasNext());
+        assertEquals(asList(12, 6, -4), Collections.takeWhile(LESS_16, list));
     }
 
     @Test
     public void testCollectionsTakeWhileEmpty() {
         final List<Integer> emptyList = emptyList();
-
-        Iterable<Integer> takeWhileIter = Collections.takeWhile(LESS_16, emptyList);
-        Iterator<Integer> iterator = takeWhileIter.iterator();
-        assertNotNull(iterator);
-
-        for (int item : emptyList) {
-            if (item >= 16) {
-                break;
-            }
-            assertTrue(iterator.hasNext());
-            assertEquals(item, (int) iterator.next());
-        }
-        assertFalse(iterator.hasNext());
+        assertEquals(asList(), Collections.takeWhile(LESS_16, emptyList));
     }
 
     @Test
     public void testCollectionsTakeUnless() {
-
         List<Integer> list = asList(12, 6, -4, 27, 16, -12, 30);
-        Iterable<Integer> takeUnlessIter = Collections.takeUnless(GREATER_25, list);
-        Iterator<Integer> iterator = takeUnlessIter.iterator();
-        assertNotNull(iterator);
-
-        for (int item : list) {
-            if (item > 25) {
-                break;
-            }
-            assertTrue(iterator.hasNext());
-            assertEquals(item, (int) iterator.next());
-        }
-        assertFalse(iterator.hasNext());
+        assertEquals(asList(12, 6, -4), Collections.takeUnless(GREATER_25, list));
     }
 
     @Test
