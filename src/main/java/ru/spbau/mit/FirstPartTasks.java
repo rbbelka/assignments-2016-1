@@ -28,7 +28,8 @@ public final class FirstPartTasks {
 
     // Список альбомов, в которых есть хотя бы один трек с рейтингом более 95, отсортированный по названию
     public static List<Album> sortedFavorites(Stream<Album> albums) {
-        return albums.filter(a -> a.getTracks().stream().anyMatch(t -> t.getRating() > 95))
+        final int threshold = 95;
+        return albums.filter(a -> a.getTracks().stream().anyMatch(t -> t.getRating() > threshold))
                 .sorted((a, b) -> a.toString().compareTo(b.toString())).collect(toList());
     }
 
@@ -39,7 +40,10 @@ public final class FirstPartTasks {
 
     // Сгруппировать альбомы по артистам (в качестве значения вместо объекта 'Album' использовать его имя)
     public static Map<Artist, List<String>> groupByArtistMapName(Stream<Album> albums) {
-        return albums.collect(Collectors.groupingBy(Album::getArtist, Collectors.mapping(Album::getName, toList())));
+        return albums.collect(Collectors.groupingBy(
+                    Album::getArtist,
+                    Collectors.mapping(Album::getName, toList())
+                ));
     }
 
     // Число повторяющихся альбомов в потоке
@@ -70,7 +74,7 @@ public final class FirstPartTasks {
     // Вернуть строку, состояющую из конкатенаций переданного массива, и окруженную строками "<", ">"
     // см. тесты
     public static String joinTo(String... strings) {
-        return Stream.of(strings).collect(Collectors.joining(", ", "<",">"));
+        return Stream.of(strings).collect(Collectors.joining(", ", "<", ">"));
     }
 
     // Вернуть поток из объектов класса 'clazz'
