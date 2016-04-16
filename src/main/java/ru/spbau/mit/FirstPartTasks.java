@@ -23,14 +23,15 @@ public final class FirstPartTasks {
     // Список треков, отсортированный лексикографически по названию, включающий все треки альбомов из 'albums'
     public static List<String> allTracksSorted(Stream<Album> albums) {
         return albums.flatMap(a -> a.getTracks().stream())
-                .map(Track::getName).sorted().collect(toList());
+                     .map(Track::getName).sorted().collect(toList());
     }
 
     // Список альбомов, в которых есть хотя бы один трек с рейтингом более 95, отсортированный по названию
     public static List<Album> sortedFavorites(Stream<Album> albums) {
         final int threshold = 95;
-        return albums.filter(a -> a.getTracks().stream().anyMatch(t -> t.getRating() > threshold))
-                .sorted((a, b) -> a.toString().compareTo(b.toString())).collect(toList());
+        return albums.filter(a -> a.getTracks().stream()
+                                   .anyMatch(t -> t.getRating() > threshold))
+                     .sorted(Comparator.comparing(Album::toString)).collect(toList());
     }
 
     // Сгруппировать альбомы по артистам
@@ -49,20 +50,23 @@ public final class FirstPartTasks {
     // Число повторяющихся альбомов в потоке
     public static long countAlbumDuplicates(Stream<Album> albums) {
         return albums.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet().stream().filter(a -> a.getValue() > 1).count();
+                     .entrySet().stream().filter(a -> a.getValue() > 1).count();
     }
 
     // Альбом в котором максимум рейтинга минимален
     // (если в альбоме нет ни одного трека, считать, что максимум рейтинга в нем --- 0)
     public static Optional<Album> minMaxRating(Stream<Album> albums) {
-        return albums.min(Comparator.comparingInt(a -> a.getTracks().stream()
-                .map(Track::getRating).max(Integer::compareTo).orElse(0)));
+        return albums.min(Comparator.comparingInt(
+                a -> a.getTracks().stream().map(Track::getRating)
+                            .max(Integer::compareTo).orElse(0)
+        ));
     }
 
     // Список альбомов, отсортированный по убыванию среднего рейтинга его треков (0, если треков нет)
     public static List<Album> sortByAverageRating(Stream<Album> albums) {
         return albums.sorted(Comparator.comparing(a -> a.getTracks().stream()
-                .mapToInt(Track::getRating).average().orElse(0), Collections.reverseOrder())).collect(toList());
+                .mapToInt(Track::getRating).average().orElse(0), Collections.reverseOrder()))
+                .collect(toList());
     }
 
     // Произведение всех чисел потока по модулю 'modulo'
@@ -78,7 +82,7 @@ public final class FirstPartTasks {
     }
 
     // Вернуть поток из объектов класса 'clazz'
-    public static <R> Stream<?> filterIsInstance(Stream<?> s, Class<R> clazz) {
-        return s.filter(clazz::isInstance);
+    public static <R> Stream<R> filterIsInstance(Stream<?> s, Class<R> clazz) {
+        return s.filter(clazz::isInstance).map(o -> (R) o);
     }
 }
